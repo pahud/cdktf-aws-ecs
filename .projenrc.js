@@ -16,7 +16,7 @@ const project = new ConstructLibraryCdktf({
   peerDeps: [
     '@cdktf/provider-aws',
   ],
-  minNodeVersion: '12.20.0',
+  minNodeVersion: '14.17.0',
   depsUpgrade: DependenciesUpgradeMechanism.githubWorkflow({
     ignoreProjen: false,
     workflowOptions: {
