@@ -30,8 +30,8 @@ const project = new ConstructLibraryCdktf({
   },
   npmAccess: NpmAccess.PUBLIC,
   publishToPypi: {
-    distName: 'pahud-cdktf-aws-eks',
-    module: 'pahud_cdktf_aws_eks',
+    distName: 'pahud-cdktf-aws-ecs',
+    module: 'pahud_cdktf_aws_ecs',
   },
 });
 
