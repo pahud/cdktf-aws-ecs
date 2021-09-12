@@ -34,7 +34,7 @@ cluster.addAsgCapacity('ASGCapacity', {
 
 ## Existing VPC subnets
 
-To deploy in any existing VPC, specify the `vpcSubnets.
+To deploy in any existing VPC, specify the `vpcSubnets`.
 
 ```ts
 cluster.addAsgCapacity('ASGCapacity', {
