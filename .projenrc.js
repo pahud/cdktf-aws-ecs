@@ -29,6 +29,10 @@ const project = new ConstructLibraryCdktf({
     allowedUsernames: ['pahud'],
   },
   npmAccess: NpmAccess.PUBLIC,
+  publishToPypi: {
+    distName: 'pahud-cdktf-aws-eks',
+    module: 'pahud_cdktf_aws_eks',
+  },
 });
 
 const common_exclude = ['cdktf.out', 'yarn-error.log', 'dependabot.yml', '.terraform', 'terraform.*'];
