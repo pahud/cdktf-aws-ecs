@@ -1,6 +1,7 @@
-import { AwsProvider, AutoscalingGroup, EcsCapacityProvider, LaunchTemplate, DataAwsAmi, IamRole, IamInstanceProfile, IamPolicyAttachment, DataAwsAvailabilityZones as AZ } from '@cdktf/provider-aws';
+import { AwsProvider, AutoscalingGroup, EcsCapacityProvider, LaunchTemplate, IamRole, IamInstanceProfile, IamPolicyAttachment, DataAwsAvailabilityZones as AZ } from '@cdktf/provider-aws';
 import { Token } from 'cdktf';
 import { Construct } from 'constructs';
+import { AmazonLinuxGeneration, EcsOptimizedAmi } from '.';
 import * as awsEcs from './imports/modules/terraform-aws-modules/ecs/aws';
 import * as awsVpc from './imports/modules/terraform-aws-modules/vpc/aws';
 
@@ -108,17 +109,9 @@ export class Cluster extends Construct {
   }
   private _createLaunchTemplate(instanceProfileArn: string): LaunchTemplate {
     return new LaunchTemplate(this, 'LT', {
-      imageId: new DataAwsAmi(this, 'EcsAmi', {
-        owners: ['amazon'],
-        mostRecent: true,
-        filter: [
-          {
-            name: 'name',
-
-            values: ['amzn-ami-*-amazon-ecs-optimized'],
-          },
-        ],
-      }).id,
+      imageId: new EcsOptimizedAmi(this, {
+        generation: AmazonLinuxGeneration.AMAZON_LINUX_2,
+      }).amiId,
       iamInstanceProfile: [{ arn: instanceProfileArn }],
       instanceType: this.props.instanceType ?? 't3.large',
     });
