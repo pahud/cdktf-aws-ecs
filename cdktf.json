@@ -1,0 +1,9 @@
+{
+  "language": "typescript",
+  "app": "npx ts-node src/integ.default.ts",
+  "terraformModules": [
+    "terraform-aws-modules/vpc/aws",
+    "terraform-aws-modules/ecs/aws"
+  ],
+  "codeMakerOutput": "src/imports"
+}
