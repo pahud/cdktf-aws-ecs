@@ -111,7 +111,7 @@ export class Cluster extends Construct {
     return new LaunchTemplate(this, 'LT', {
       imageId: new EcsOptimizedAmi(this, {
         generation: AmazonLinuxGeneration.AMAZON_LINUX_2,
-      }).getAmiId(),
+      }).amiId,
       iamInstanceProfile: [{ arn: instanceProfileArn }],
       instanceType: this.props.instanceType ?? 't3.large',
     });

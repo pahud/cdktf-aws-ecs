@@ -48,7 +48,7 @@ export class EcsOptimizedAmi {
   /**
    * Return the correct image
    */
-  public getAmiId(): string {
+  get amiId(): string {
     return lookupImage(this.scope, 'EcsOptimizedAmiId', this.amiParameterName);
   }
 }
