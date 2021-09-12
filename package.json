@@ -1,8 +1,9 @@
 {
-  "name": "cdktf-aws-ecs",
+  "name": "@pahud/cdktf-aws-ecs",
+  "description": "CDKTF construct library for Amazon ECS",
   "repository": {
     "type": "git",
-    "url": "https://github.com/pahudnet/cdktf-aws-ecs.git"
+    "url": "https://github.com/pahud/cdktf-aws-ecs"
   },
   "scripts": {
     "clobber": "npx projen clobber",
@@ -16,7 +17,6 @@
     "unbump": "npx projen unbump",
     "publish:github": "npx projen publish:github",
     "upgrade": "npx projen upgrade",
-    "upgrade-projen": "npx projen upgrade-projen",
     "default": "npx projen default",
     "watch": "npx projen watch",
     "package": "npx projen package",
@@ -28,16 +28,17 @@
     "projen": "npx projen"
   },
   "author": {
-    "name": "Pahud",
+    "name": "Pahud Hsieh",
     "email": "pahudnet@gmail.com",
     "organization": false
   },
   "devDependencies": {
+    "@cdktf/provider-aws": "^2.0.9",
     "@types/jest": "^27.0.1",
-    "@types/node": "^14.17.0",
+    "@types/node": "^12.20.0",
     "@typescript-eslint/eslint-plugin": "^4.31.0",
     "@typescript-eslint/parser": "^4.31.0",
-    "cdktf": "0.4.0",
+    "cdktf": "0.5.0",
     "constructs": "3.3.75",
     "eslint": "^7.32.0",
     "eslint-import-resolver-node": "^0.3.6",
@@ -57,15 +58,25 @@
     "typescript": "^4.4.3"
   },
   "peerDependencies": {
-    "cdktf": "^0.4.0",
+    "@cdktf/provider-aws": "^2.0.9",
+    "cdktf": "^0.5.0",
     "constructs": "^3.3.75"
+  },
+  "dependencies": {
+    "@cdktf/provider-aws": "^2.0.9"
   },
   "bundledDependencies": [],
   "keywords": [
     "cdk"
   ],
+  "engines": {
+    "node": ">= 12.20.0"
+  },
   "main": "lib/index.js",
   "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "version": "0.0.0",
   "jest": {
     "testMatch": [
