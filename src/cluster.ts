@@ -1,7 +1,7 @@
 import { AwsProvider, AutoscalingGroup, EcsCapacityProvider, LaunchTemplate, IamRole, IamInstanceProfile, IamPolicyAttachment, DataAwsAvailabilityZones as AZ } from '@cdktf/provider-aws';
 import { Token } from 'cdktf';
 import { Construct } from 'constructs';
-import { AmazonLinuxGeneration, EcsOptimizedAmi } from '.';
+import { AmazonLinuxGeneration, BottleRocketImage, EcsOptimizedAmi, IEcsMachineImage } from '.';
 import * as awsEcs from './imports/modules/terraform-aws-modules/ecs/aws';
 import * as awsVpc from './imports/modules/terraform-aws-modules/vpc/aws';
 
@@ -28,6 +28,7 @@ export interface AsgCapacityOptions {
   readonly maxCapacity?: number;
   readonly minCapacity?: number;
   readonly desiredCapacity?: number;
+  readonly machineImage?: IEcsMachineImage;
 }
 
 export class Cluster extends Construct {
@@ -35,13 +36,11 @@ export class Cluster extends Construct {
   readonly clusterName: string;
   readonly vpc?: any;
   readonly vpcId?: string;
-  private readonly id: string;
   private readonly vpcSubnets: string[];
   private readonly props: ClusterProps;
   constructor(scope: Construct, id: string, props: ClusterProps = {}) {
     super(scope, id);
 
-    this.id = id;
     this.props = props;
     this.region = props.region ?? 'us-east-1';
     new AwsProvider(this, 'aws', { region: this.region });
@@ -63,9 +62,9 @@ export class Cluster extends Construct {
       name: this.clusterName,
     });
   }
-  private _createContainerServiceforEC2Role(): IamRole {
-    const role = new IamRole(this, 'ecs-instance-role', {
-      name: `${this.id}-ecs-instance-role`,
+  private _createContainerServiceforEC2Role(id: string): IamRole {
+    const role = new IamRole(this, `${id}-ecs-instance-role`, {
+      name: `${id}-ecs-instance-role`,
       // name: 'ecs-instance-role',
       assumeRolePolicy: JSON.stringify({
         Version: '2012-10-17',
@@ -81,15 +80,20 @@ export class Cluster extends Construct {
         ],
       }),
     });
-    new IamPolicyAttachment(this, ' AmazonEC2ContainerServiceforEC2RoleAttachment', {
+    new IamPolicyAttachment(this, `${id}AmazonEC2ContainerServiceforEC2RoleAttachment`, {
       name: 'AmazonEC2ContainerServiceforEC2RoleAttachment',
       policyArn: 'arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role',
       roles: [role.name],
     });
+    new IamPolicyAttachment(this, `${id}AmazonSSMManagedInstanceCoreAttachment`, {
+      name: 'AmazonSSMManagedInstanceCoreAttachment',
+      policyArn: 'arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore',
+      roles: [role.name],
+    });
     return role;
   }
-  private _createIamInstanceProfile(roleName: string): IamInstanceProfile {
-    return new IamInstanceProfile(this, 'InstanceProfile', {
+  private _createIamInstanceProfile(id: string, roleName: string): IamInstanceProfile {
+    return new IamInstanceProfile(this, `${id}InstanceProfile`, {
       role: roleName,
     });
   }
@@ -107,9 +111,9 @@ export class Cluster extends Construct {
     });
     return vpc;
   }
-  private _createLaunchTemplate(instanceProfileArn: string): LaunchTemplate {
-    return new LaunchTemplate(this, 'LT', {
-      imageId: new EcsOptimizedAmi(this, {
+  private _createLaunchTemplate(id: string, instanceProfileArn: string, image?: IEcsMachineImage): LaunchTemplate {
+    return new LaunchTemplate(this, `${id}LT`, {
+      imageId: image?.amiId ?? new EcsOptimizedAmi(this, {
         generation: AmazonLinuxGeneration.AMAZON_LINUX_2,
       }).amiId,
       iamInstanceProfile: [{ arn: instanceProfileArn }],
@@ -117,10 +121,16 @@ export class Cluster extends Construct {
     });
   }
   public addAsgCapacity(id: string, options: AsgCapacityOptions) {
-    const instanceRole = this._createContainerServiceforEC2Role();
-    const instanceProfile = this._createIamInstanceProfile(instanceRole.name);
-    const lt = this._createLaunchTemplate(instanceProfile.arn);
+    const instanceRole = this._createContainerServiceforEC2Role(id);
+    const instanceProfile = this._createIamInstanceProfile(id, instanceRole.name);
+    const lt = this._createLaunchTemplate(id, instanceProfile.arn, options.machineImage);
+    // default userData
     let userData = `#!/bin/bash\necho ECS_CLUSTER=${this.clusterName} > /etc/ecs/ecs.config`;
+    // if bottlerocket image
+    if (options.machineImage && isBottleRocketImage(options.machineImage)) {
+      userData = `[settings.ecs]\ncluster = "${this.clusterName}"`;
+    }
+
     let b64userdata = Buffer.from(userData).toString('base64');
     lt.addOverride('user_data', b64userdata);
 
@@ -137,11 +147,12 @@ export class Cluster extends Construct {
       launchTemplate: [
         {
           id: lt.id,
+          version: '$Latest',
         },
       ],
     });
-    new EcsCapacityProvider(this, 'EcsCapacityProvider', {
-      name: `cp-${this.id}`,
+    new EcsCapacityProvider(this, `${id}EcsCapacityProvider`, {
+      name: `cp-${id}`,
       autoScalingGroupProvider: [
         {
           autoScalingGroupArn: asg.arn,
@@ -149,4 +160,8 @@ export class Cluster extends Construct {
       ],
     });
   }
+}
+
+function isBottleRocketImage(image: IEcsMachineImage) {
+  return image instanceof BottleRocketImage;
 }
