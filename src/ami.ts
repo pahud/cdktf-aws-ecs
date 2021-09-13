@@ -39,8 +39,9 @@ export enum InstanceArchitecture {
 }
 
 export interface IEcsMachineImage {
-  get amiId(): string;
+  readonly amiId: string;
 }
+
 
 export interface EcsOptimizedAmiProps {
   readonly generation?: AmazonLinuxGeneration;
@@ -101,27 +102,6 @@ export interface BottleRocketImageProps {
    * @default - x86_64
    */
   readonly architecture?: InstanceArchitecture;
-
-  /**
-   * Whether the AMI ID is cached to be stable between deployments
-   *
-   * By default, the newest image is used on each deployment. This will cause
-   * instances to be replaced whenever a new version is released, and may cause
-   * downtime if there aren't enough running instances in the AutoScalingGroup
-   * to reschedule the tasks on.
-   *
-   * If set to true, the AMI ID will be cached in `cdk.context.json` and the
-   * same value will be used on future runs. Your instances will not be replaced
-   * but your AMI version will grow old over time. To refresh the AMI lookup,
-   * you will have to evict the value from the cache using the `cdk context`
-   * command. See https://docs.aws.amazon.com/cdk/latest/guide/context.html for
-   * more information.
-   *
-   * Can not be set to `true` in environment-agnostic stacks.
-   *
-   * @default false
-   */
-  readonly cachedInContext?: boolean;
 }
 
 /**
@@ -141,8 +121,6 @@ export class BottleRocketImage implements IEcsMachineImage {
 
   private readonly scope: Construct;
 
-  // private readonly cachedInContext: boolean;
-
   /**
    * Constructs a new instance of the BottleRocketImage class.
    */
@@ -154,7 +132,6 @@ export class BottleRocketImage implements IEcsMachineImage {
     // set the SSM parameter name
     this.amiParameterName = `/aws/service/bottlerocket/${this.variant}/${this.architecture}/latest/image_id`;
 
-    // this.cachedInContext = props.cachedInContext ?? false;
   }
 
   /**
@@ -163,21 +140,7 @@ export class BottleRocketImage implements IEcsMachineImage {
   get amiId(): string {
     return lookupImage(this.scope, 'BottlerocketAmiId', this.amiParameterName);
   }
-
-  /**
-   * Return the correct image
-   */
-  // public getImage(scope: CoreConstruct): ec2.MachineImageConfig {
-  // const ami = lookupImage(scope, this.cachedInContext, this.amiParameterName);
-
-  // return {
-  //   imageId: ami,
-  //   osType: ec2.OperatingSystemType.LINUX,
-  //   userData: ec2.UserData.custom(''),
-  // };
-  // }
 }
-
 
 function lookupImage(scope: Construct, id: string, parameterName: string) {
   return StringParameter.valueFromLookup(scope, id, parameterName);
