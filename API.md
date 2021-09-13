@@ -96,6 +96,12 @@ const asgCapacityOptions: AsgCapacityOptions = { ... }
 
 ---
 
+##### `machineImage`<sup>Optional</sup> <a name="@pahud/cdktf-aws-ecs.AsgCapacityOptions.property.machineImage"></a>
+
+- *Type:* [`@pahud/cdktf-aws-ecs.IEcsMachineImage`](#@pahud/cdktf-aws-ecs.IEcsMachineImage)
+
+---
+
 ##### `maxCapacity`<sup>Optional</sup> <a name="@pahud/cdktf-aws-ecs.AsgCapacityOptions.property.maxCapacity"></a>
 
 - *Type:* `number`
@@ -105,6 +111,38 @@ const asgCapacityOptions: AsgCapacityOptions = { ... }
 ##### `minCapacity`<sup>Optional</sup> <a name="@pahud/cdktf-aws-ecs.AsgCapacityOptions.property.minCapacity"></a>
 
 - *Type:* `number`
+
+---
+
+### BottleRocketImageProps <a name="@pahud/cdktf-aws-ecs.BottleRocketImageProps"></a>
+
+Properties for BottleRocketImage.
+
+#### Initializer <a name="[object Object].Initializer"></a>
+
+```typescript
+import { BottleRocketImageProps } from '@pahud/cdktf-aws-ecs'
+
+const bottleRocketImageProps: BottleRocketImageProps = { ... }
+```
+
+##### `architecture`<sup>Optional</sup> <a name="@pahud/cdktf-aws-ecs.BottleRocketImageProps.property.architecture"></a>
+
+- *Type:* [`@pahud/cdktf-aws-ecs.InstanceArchitecture`](#@pahud/cdktf-aws-ecs.InstanceArchitecture)
+- *Default:* x86_64
+
+The CPU architecture.
+
+---
+
+##### `variant`<sup>Optional</sup> <a name="@pahud/cdktf-aws-ecs.BottleRocketImageProps.property.variant"></a>
+
+- *Type:* [`@pahud/cdktf-aws-ecs.BottlerocketEcsVariant`](#@pahud/cdktf-aws-ecs.BottlerocketEcsVariant)
+- *Default:* BottlerocketEcsVariant.AWS_ECS_1
+
+The Amazon ECS variant to use.
+
+Only `aws-ecs-1` is currently available
 
 ---
 
@@ -131,6 +169,45 @@ const ecsOptimizedAmiProps: EcsOptimizedAmiProps = { ... }
 ---
 
 ## Classes <a name="Classes"></a>
+
+### BottleRocketImage <a name="@pahud/cdktf-aws-ecs.BottleRocketImage"></a>
+
+- *Implements:* [`@pahud/cdktf-aws-ecs.IEcsMachineImage`](#@pahud/cdktf-aws-ecs.IEcsMachineImage)
+
+Construct an Bottlerocket image from the latest AMI published in SSM.
+
+#### Initializers <a name="@pahud/cdktf-aws-ecs.BottleRocketImage.Initializer"></a>
+
+```typescript
+import { BottleRocketImage } from '@pahud/cdktf-aws-ecs'
+
+new BottleRocketImage(scope: Construct, props?: BottleRocketImageProps)
+```
+
+##### `scope`<sup>Required</sup> <a name="@pahud/cdktf-aws-ecs.BottleRocketImage.parameter.scope"></a>
+
+- *Type:* [`constructs.Construct`](#constructs.Construct)
+
+---
+
+##### `props`<sup>Optional</sup> <a name="@pahud/cdktf-aws-ecs.BottleRocketImage.parameter.props"></a>
+
+- *Type:* [`@pahud/cdktf-aws-ecs.BottleRocketImageProps`](#@pahud/cdktf-aws-ecs.BottleRocketImageProps)
+
+---
+
+
+
+#### Properties <a name="Properties"></a>
+
+##### `amiId`<sup>Required</sup> <a name="@pahud/cdktf-aws-ecs.BottleRocketImage.property.amiId"></a>
+
+- *Type:* `string`
+
+Return the correct image.
+
+---
+
 
 ### ClusterProps <a name="@pahud/cdktf-aws-ecs.ClusterProps"></a>
 
@@ -180,6 +257,8 @@ VPC subnet IDs for the container instances.
 
 
 ### EcsOptimizedAmi <a name="@pahud/cdktf-aws-ecs.EcsOptimizedAmi"></a>
+
+- *Implements:* [`@pahud/cdktf-aws-ecs.IEcsMachineImage`](#@pahud/cdktf-aws-ecs.IEcsMachineImage)
 
 #### Initializers <a name="@pahud/cdktf-aws-ecs.EcsOptimizedAmi.Initializer"></a>
 
@@ -279,6 +358,20 @@ StringParameter.valueFromLookup(scope: Construct, id: string, parameterName: str
 
 
 
+## Protocols <a name="Protocols"></a>
+
+### IEcsMachineImage <a name="@pahud/cdktf-aws-ecs.IEcsMachineImage"></a>
+
+- *Implemented By:* [`@pahud/cdktf-aws-ecs.BottleRocketImage`](#@pahud/cdktf-aws-ecs.BottleRocketImage), [`@pahud/cdktf-aws-ecs.EcsOptimizedAmi`](#@pahud/cdktf-aws-ecs.EcsOptimizedAmi), [`@pahud/cdktf-aws-ecs.IEcsMachineImage`](#@pahud/cdktf-aws-ecs.IEcsMachineImage)
+
+
+#### Properties <a name="Properties"></a>
+
+##### `amiId`<sup>Required</sup> <a name="@pahud/cdktf-aws-ecs.IEcsMachineImage.property.amiId"></a>
+
+- *Type:* `string`
+
+---
 
 ## Enums <a name="Enums"></a>
 
@@ -313,6 +406,35 @@ Use the Amazon ECS GPU-optimized AMI.
 #### `ARM` <a name="@pahud/cdktf-aws-ecs.AmiHardwareType.ARM"></a>
 
 Use the Amazon ECS-optimized Amazon Linux 2 (arm64) AMI.
+
+---
+
+
+### BottlerocketEcsVariant <a name="BottlerocketEcsVariant"></a>
+
+Amazon ECS variant.
+
+#### `AWS_ECS_1` <a name="@pahud/cdktf-aws-ecs.BottlerocketEcsVariant.AWS_ECS_1"></a>
+
+aws-ecs-1 variant.
+
+---
+
+
+### InstanceArchitecture <a name="InstanceArchitecture"></a>
+
+Identifies an instance's CPU architecture.
+
+#### `ARM_64` <a name="@pahud/cdktf-aws-ecs.InstanceArchitecture.ARM_64"></a>
+
+ARM64 architecture.
+
+---
+
+
+#### `X86_64` <a name="@pahud/cdktf-aws-ecs.InstanceArchitecture.X86_64"></a>
+
+x86-64 architecture.
 
 ---
 
