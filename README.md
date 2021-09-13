@@ -41,3 +41,13 @@ cluster.addAsgCapacity('ASGCapacity', {
   vpcSubnets: ['subnet-111','subnet-222','subnet-333' ],
 });
 ```
+
+## Bottlerocket support
+
+To create cluster capacity with Bottlerocket machine image:
+
+```ts
+cluster.addAsgCapacity('BRCapacity', {
+  machineImage: new BottleRocketImage(stack),
+});
+```
