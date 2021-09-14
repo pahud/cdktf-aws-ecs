@@ -55,11 +55,19 @@ public addAsgCapacity(id: string, options: AsgCapacityOptions)
 
 ##### `clusterName`<sup>Required</sup> <a name="@pahud/cdktf-aws-ecs.Cluster.property.clusterName"></a>
 
+```typescript
+public readonly clusterName: string;
+```
+
 - *Type:* `string`
 
 ---
 
 ##### `region`<sup>Required</sup> <a name="@pahud/cdktf-aws-ecs.Cluster.property.region"></a>
+
+```typescript
+public readonly region: string;
+```
 
 - *Type:* `string`
 
@@ -67,11 +75,19 @@ public addAsgCapacity(id: string, options: AsgCapacityOptions)
 
 ##### `vpc`<sup>Optional</sup> <a name="@pahud/cdktf-aws-ecs.Cluster.property.vpc"></a>
 
+```typescript
+public readonly vpc: any;
+```
+
 - *Type:* `any`
 
 ---
 
 ##### `vpcId`<sup>Optional</sup> <a name="@pahud/cdktf-aws-ecs.Cluster.property.vpcId"></a>
+
+```typescript
+public readonly vpcId: string;
+```
 
 - *Type:* `string`
 
@@ -92,11 +108,19 @@ const asgCapacityOptions: AsgCapacityOptions = { ... }
 
 ##### `desiredCapacity`<sup>Optional</sup> <a name="@pahud/cdktf-aws-ecs.AsgCapacityOptions.property.desiredCapacity"></a>
 
+```typescript
+public readonly desiredCapacity: number;
+```
+
 - *Type:* `number`
 
 ---
 
 ##### `machineImage`<sup>Optional</sup> <a name="@pahud/cdktf-aws-ecs.AsgCapacityOptions.property.machineImage"></a>
+
+```typescript
+public readonly machineImage: IEcsMachineImage;
+```
 
 - *Type:* [`@pahud/cdktf-aws-ecs.IEcsMachineImage`](#@pahud/cdktf-aws-ecs.IEcsMachineImage)
 
@@ -104,11 +128,19 @@ const asgCapacityOptions: AsgCapacityOptions = { ... }
 
 ##### `maxCapacity`<sup>Optional</sup> <a name="@pahud/cdktf-aws-ecs.AsgCapacityOptions.property.maxCapacity"></a>
 
+```typescript
+public readonly maxCapacity: number;
+```
+
 - *Type:* `number`
 
 ---
 
 ##### `minCapacity`<sup>Optional</sup> <a name="@pahud/cdktf-aws-ecs.AsgCapacityOptions.property.minCapacity"></a>
+
+```typescript
+public readonly minCapacity: number;
+```
 
 - *Type:* `number`
 
@@ -128,6 +160,10 @@ const bottleRocketImageProps: BottleRocketImageProps = { ... }
 
 ##### `architecture`<sup>Optional</sup> <a name="@pahud/cdktf-aws-ecs.BottleRocketImageProps.property.architecture"></a>
 
+```typescript
+public readonly architecture: InstanceArchitecture;
+```
+
 - *Type:* [`@pahud/cdktf-aws-ecs.InstanceArchitecture`](#@pahud/cdktf-aws-ecs.InstanceArchitecture)
 - *Default:* x86_64
 
@@ -136,6 +172,10 @@ The CPU architecture.
 ---
 
 ##### `variant`<sup>Optional</sup> <a name="@pahud/cdktf-aws-ecs.BottleRocketImageProps.property.variant"></a>
+
+```typescript
+public readonly variant: BottlerocketEcsVariant;
+```
 
 - *Type:* [`@pahud/cdktf-aws-ecs.BottlerocketEcsVariant`](#@pahud/cdktf-aws-ecs.BottlerocketEcsVariant)
 - *Default:* BottlerocketEcsVariant.AWS_ECS_1
@@ -158,11 +198,19 @@ const ecsOptimizedAmiProps: EcsOptimizedAmiProps = { ... }
 
 ##### `generation`<sup>Optional</sup> <a name="@pahud/cdktf-aws-ecs.EcsOptimizedAmiProps.property.generation"></a>
 
+```typescript
+public readonly generation: AmazonLinuxGeneration;
+```
+
 - *Type:* [`@pahud/cdktf-aws-ecs.AmazonLinuxGeneration`](#@pahud/cdktf-aws-ecs.AmazonLinuxGeneration)
 
 ---
 
 ##### `hwtype`<sup>Optional</sup> <a name="@pahud/cdktf-aws-ecs.EcsOptimizedAmiProps.property.hwtype"></a>
+
+```typescript
+public readonly hwtype: AmiHardwareType;
+```
 
 - *Type:* [`@pahud/cdktf-aws-ecs.AmiHardwareType`](#@pahud/cdktf-aws-ecs.AmiHardwareType)
 
@@ -202,6 +250,10 @@ new BottleRocketImage(scope: Construct, props?: BottleRocketImageProps)
 
 ##### `amiId`<sup>Required</sup> <a name="@pahud/cdktf-aws-ecs.BottleRocketImage.property.amiId"></a>
 
+```typescript
+public readonly amiId: string;
+```
+
 - *Type:* `string`
 
 Return the correct image.
@@ -225,6 +277,10 @@ new ClusterProps()
 
 ##### `instanceType`<sup>Optional</sup> <a name="@pahud/cdktf-aws-ecs.ClusterProps.property.instanceType"></a>
 
+```typescript
+public readonly instanceType: string;
+```
+
 - *Type:* `string`
 - *Default:* t3.large
 
@@ -234,11 +290,19 @@ instance type for the default capacity.
 
 ##### `name`<sup>Optional</sup> <a name="@pahud/cdktf-aws-ecs.ClusterProps.property.name"></a>
 
+```typescript
+public readonly name: string;
+```
+
 - *Type:* `string`
 
 ---
 
 ##### `region`<sup>Optional</sup> <a name="@pahud/cdktf-aws-ecs.ClusterProps.property.region"></a>
+
+```typescript
+public readonly region: string;
+```
 
 - *Type:* `string`
 
@@ -247,6 +311,10 @@ The AWS region to deploy.
 ---
 
 ##### `vpcSubnets`<sup>Optional</sup> <a name="@pahud/cdktf-aws-ecs.ClusterProps.property.vpcSubnets"></a>
+
+```typescript
+public readonly vpcSubnets: string[];
+```
 
 - *Type:* `string`[]
 - *Default:* private subnets of a new VPC.
@@ -286,6 +354,10 @@ new EcsOptimizedAmi(scope: Construct, props?: EcsOptimizedAmiProps)
 
 ##### `amiId`<sup>Required</sup> <a name="@pahud/cdktf-aws-ecs.EcsOptimizedAmi.property.amiId"></a>
 
+```typescript
+public readonly amiId: string;
+```
+
 - *Type:* `string`
 
 Return the correct image.
@@ -294,11 +366,19 @@ Return the correct image.
 
 ##### `amiParameterName`<sup>Required</sup> <a name="@pahud/cdktf-aws-ecs.EcsOptimizedAmi.property.amiParameterName"></a>
 
+```typescript
+public readonly amiParameterName: string;
+```
+
 - *Type:* `string`
 
 ---
 
 ##### `generation`<sup>Required</sup> <a name="@pahud/cdktf-aws-ecs.EcsOptimizedAmi.property.generation"></a>
+
+```typescript
+public readonly generation: AmazonLinuxGeneration;
+```
 
 - *Type:* [`@pahud/cdktf-aws-ecs.AmazonLinuxGeneration`](#@pahud/cdktf-aws-ecs.AmazonLinuxGeneration)
 
@@ -306,11 +386,19 @@ Return the correct image.
 
 ##### `hwType`<sup>Required</sup> <a name="@pahud/cdktf-aws-ecs.EcsOptimizedAmi.property.hwType"></a>
 
+```typescript
+public readonly hwType: AmiHardwareType;
+```
+
 - *Type:* [`@pahud/cdktf-aws-ecs.AmiHardwareType`](#@pahud/cdktf-aws-ecs.AmiHardwareType)
 
 ---
 
 ##### `scope`<sup>Required</sup> <a name="@pahud/cdktf-aws-ecs.EcsOptimizedAmi.property.scope"></a>
+
+```typescript
+public readonly scope: Construct;
+```
 
 - *Type:* [`constructs.Construct`](#constructs.Construct)
 
@@ -368,6 +456,10 @@ StringParameter.valueFromLookup(scope: Construct, id: string, parameterName: str
 #### Properties <a name="Properties"></a>
 
 ##### `amiId`<sup>Required</sup> <a name="@pahud/cdktf-aws-ecs.IEcsMachineImage.property.amiId"></a>
+
+```typescript
+public readonly amiId: string;
+```
 
 - *Type:* `string`
 
