@@ -12,8 +12,7 @@ describe('Unit testing using snapshots', () => {
     expect(
       Testing.synthScope(() => {
         new Cluster(stack, 'Cluster');
-      })).
-      toMatchSnapshot();
+      })).toMatchSnapshot();
   });
   /**
    * TODO - we need `terraform` executable in the github workflow image to run this check.
