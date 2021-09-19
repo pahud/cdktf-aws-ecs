@@ -5,5 +5,6 @@
     "terraform-aws-modules/vpc/aws",
     "terraform-aws-modules/ecs/aws"
   ],
-  "codeMakerOutput": "src/imports"
+  "codeMakerOutput": "src/imports",
+  "projectId": "9106836c-8643-4ffb-a965-96d40c3436f2"
 }
