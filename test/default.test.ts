@@ -10,7 +10,6 @@ describe('Unit testing using snapshots', () => {
     expect(
       Testing.synthScope(() => {
         new Cluster(stack, 'Cluster');
-      })).
-      toMatchSnapshot();
+      })).toMatchSnapshot();
   });
 });

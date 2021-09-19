@@ -5,7 +5,7 @@ const AUTOMATION_TOKEN = 'PROJEN_GITHUB_TOKEN';
 const project = new ConstructLibraryCdktf({
   author: 'Pahud Hsieh',
   authorAddress: 'pahudnet@gmail.com',
-  cdktfVersion: '0.6.1',
+  cdktfVersion: '0.6.2',
   defaultReleaseBranch: 'main',
   name: '@pahud/cdktf-aws-ecs',
   description: 'CDKTF construct library for Amazon ECS',
