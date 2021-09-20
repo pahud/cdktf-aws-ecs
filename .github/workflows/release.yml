@@ -30,6 +30,10 @@ jobs:
           https://releases.hashicorp.com/terraform/1.0.6/terraform_1.0.6_linux_amd64.zip
           && unzip terraform.zip && mv terraform /usr/local/bin/ && rm -f
           terraform.zip
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
       - name: Install dependencies
         run: yarn install --check-files --frozen-lockfile
       - name: release
