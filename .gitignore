@@ -50,6 +50,7 @@ junit.xml
 .jsii
 tsconfig.json
 !/API.md
+!/.gitpod.yml
 cdktf.out
 yarn-error.log
 dependabot.yml

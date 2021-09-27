@@ -1,4 +1,10 @@
-const { ConstructLibraryCdktf, DependenciesUpgradeMechanism, NpmAccess } = require('projen');
+const {
+  ConstructLibraryCdktf,
+  DependenciesUpgradeMechanism,
+  NpmAccess,
+  DevEnvironmentDockerImage,
+  Gitpod,
+} = require('projen');
 
 const AUTOMATION_TOKEN = 'PROJEN_GITHUB_TOKEN';
 
@@ -33,6 +39,38 @@ const project = new ConstructLibraryCdktf({
     module: 'pahud_cdktf_aws_ecs',
   },
 });
+
+
+const gitpodPrebuild = project.addTask('gitpod:prebuild', {
+  description: 'Prebuild setup for Gitpod',
+});
+// install and compile only, do not test or package.
+gitpodPrebuild.exec('yarn install --frozen-lockfile --check-files');
+gitpodPrebuild.exec('npx projen compile');
+
+let gitpod = new Gitpod(project, {
+  dockerImage: DevEnvironmentDockerImage.fromFile('.gitpod.Dockerfile'),
+  prebuilds: {
+    addCheck: true,
+    addBadge: true,
+    addLabel: true,
+    branches: true,
+    pullRequests: true,
+    pullRequestsFromForks: true,
+  },
+});
+
+gitpod.addCustomTask({
+  init: 'yarn gitpod:prebuild',
+  // always upgrade after init
+  command: 'npx projen upgrade',
+});
+
+gitpod.addVscodeExtensions(
+  'dbaeumer.vscode-eslint',
+  'ms-azuretools.vscode-docker',
+  'AmazonWebServices.aws-toolkit-vscode',
+);
 
 const common_exclude = ['cdktf.out', 'yarn-error.log', 'dependabot.yml', '.terraform', 'terraform.*'];
 project.npmignore.exclude(...common_exclude, 'images', 'docs', 'website');
