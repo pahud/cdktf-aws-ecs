@@ -1,10 +1,11 @@
-import { AwsProvider, AutoscalingGroup, EcsCapacityProvider, LaunchTemplate, IamRole, IamInstanceProfile, IamPolicyAttachment, DataAwsAvailabilityZones as AZ } from '@cdktf/provider-aws';
+import { AwsProvider, AutoScaling, ECS as ecs, EC2 as ec2, IAM as iam, DataSources } from '@cdktf/provider-aws';
 import { Token } from 'cdktf';
 import { Construct } from 'constructs';
 import { AmazonLinuxGeneration, BottleRocketImage, EcsOptimizedAmi, IEcsMachineImage } from '.';
 import * as awsEcs from './imports/modules/terraform-aws-modules/ecs/aws';
 import * as awsVpc from './imports/modules/terraform-aws-modules/vpc/aws';
 
+const AZ = DataSources.DataAwsAvailabilityZones;
 
 export class ClusterProps {
   /**
@@ -62,8 +63,8 @@ export class Cluster extends Construct {
       name: this.clusterName,
     });
   }
-  private _createContainerServiceforEC2Role(id: string): IamRole {
-    const role = new IamRole(this, `${id}-ecs-instance-role`, {
+  private _createContainerServiceforEC2Role(id: string): iam.IamRole {
+    const role = new iam.IamRole(this, `${id}-ecs-instance-role`, {
       name: `${id}-ecs-instance-role`,
       // name: 'ecs-instance-role',
       assumeRolePolicy: JSON.stringify({
@@ -80,20 +81,20 @@ export class Cluster extends Construct {
         ],
       }),
     });
-    new IamPolicyAttachment(this, `${id}AmazonEC2ContainerServiceforEC2RoleAttachment`, {
+    new iam.IamPolicyAttachment(this, `${id}AmazonEC2ContainerServiceforEC2RoleAttachment`, {
       name: 'AmazonEC2ContainerServiceforEC2RoleAttachment',
       policyArn: 'arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role',
-      roles: [role.name],
+      roles: [role.name!],
     });
-    new IamPolicyAttachment(this, `${id}AmazonSSMManagedInstanceCoreAttachment`, {
+    new iam.IamPolicyAttachment(this, `${id}AmazonSSMManagedInstanceCoreAttachment`, {
       name: 'AmazonSSMManagedInstanceCoreAttachment',
       policyArn: 'arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore',
-      roles: [role.name],
+      roles: [role.name!],
     });
     return role;
   }
-  private _createIamInstanceProfile(id: string, roleName: string): IamInstanceProfile {
-    return new IamInstanceProfile(this, `${id}InstanceProfile`, {
+  private _createIamInstanceProfile(id: string, roleName: string): iam.IamInstanceProfile {
+    return new iam.IamInstanceProfile(this, `${id}InstanceProfile`, {
       role: roleName,
     });
   }
@@ -111,18 +112,18 @@ export class Cluster extends Construct {
     });
     return vpc;
   }
-  private _createLaunchTemplate(id: string, instanceProfileArn: string, image?: IEcsMachineImage): LaunchTemplate {
-    return new LaunchTemplate(this, `${id}LT`, {
+  private _createLaunchTemplate(id: string, instanceProfileArn: string, image?: IEcsMachineImage): ec2.LaunchTemplate {
+    return new ec2.LaunchTemplate(this, `${id}LT`, {
       imageId: image?.amiId ?? new EcsOptimizedAmi(this, {
         generation: AmazonLinuxGeneration.AMAZON_LINUX_2,
       }).amiId,
-      iamInstanceProfile: [{ arn: instanceProfileArn }],
+      iamInstanceProfile: { arn: instanceProfileArn },
       instanceType: this.props.instanceType ?? 't3.large',
     });
   }
   public addAsgCapacity(id: string, options: AsgCapacityOptions) {
     const instanceRole = this._createContainerServiceforEC2Role(id);
-    const instanceProfile = this._createIamInstanceProfile(id, instanceRole.name);
+    const instanceProfile = this._createIamInstanceProfile(id, instanceRole.name!);
     const lt = this._createLaunchTemplate(id, instanceProfile.arn, options.machineImage);
     // default userData
     let userData = `#!/bin/bash\necho ECS_CLUSTER=${this.clusterName} > /etc/ecs/ecs.config`;
@@ -139,25 +140,21 @@ export class Cluster extends Construct {
     const maxCapacity = options.maxCapacity ?? (desiredCapacity > 0) ?
       desiredCapacity : 1;
 
-    const asg = new AutoscalingGroup(this, `${id}-ASG`, {
+    const asg = new AutoScaling.AutoscalingGroup(this, `${id}-ASG`, {
       maxSize: maxCapacity,
       desiredCapacity: desiredCapacity,
       minSize: minCapacity,
       vpcZoneIdentifier: this.vpcSubnets,
-      launchTemplate: [
-        {
-          id: lt.id,
-          version: '$Latest',
-        },
-      ],
+      launchTemplate: {
+        id: lt.id,
+        version: '$Latest',
+      },
     });
-    new EcsCapacityProvider(this, `${id}EcsCapacityProvider`, {
+    new ecs.EcsCapacityProvider(this, `${id}EcsCapacityProvider`, {
       name: `cp-${id}`,
-      autoScalingGroupProvider: [
-        {
-          autoScalingGroupArn: asg.arn,
-        },
-      ],
+      autoScalingGroupProvider: {
+        autoScalingGroupArn: asg.arn,
+      },
     });
   }
 }

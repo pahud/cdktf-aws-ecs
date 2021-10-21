@@ -1,5 +1,7 @@
-import { DataAwsSsmParameter } from '@cdktf/provider-aws';
+import { SSM } from '@cdktf/provider-aws';
 import { Construct } from 'constructs';
+
+const DataAwsSsmParameter = SSM.DataAwsSsmParameter;
 
 export class StringParameter {
   static valueFromLookup(scope: Construct, id: string, parameterName: string): string {

@@ -1,7 +1,9 @@
 import 'cdktf/lib/testing/adapters/jest';
-import { DataAwsAvailabilityZones, AutoscalingGroup, EcsCapacityProvider } from '@cdktf/provider-aws';
+import { DataSources, AutoScaling, ECS as ecs } from '@cdktf/provider-aws';
 import { TerraformStack, Testing } from 'cdktf';
 import { Cluster } from '../src';
+
+const DataAwsAvailabilityZones = DataSources.DataAwsAvailabilityZones;
 
 Testing.setupJest();
 
@@ -40,7 +42,7 @@ describe('Unit testing using snapshots', () => {
         .addAsgCapacity('Capacity', {
           desiredCapacity: 2,
         });
-    })).toHaveResourceWithProperties(AutoscalingGroup, {
+    })).toHaveResourceWithProperties(AutoScaling.AutoscalingGroup, {
       desired_capacity: 2,
       max_size: 2,
       min_size: 0,
@@ -52,7 +54,7 @@ describe('Unit testing using snapshots', () => {
         .addAsgCapacity('Capacity', {
           desiredCapacity: 2,
         });
-    })).toHaveResource(EcsCapacityProvider);
+    })).toHaveResource(ecs.EcsCapacityProvider);
   });
 });
 
