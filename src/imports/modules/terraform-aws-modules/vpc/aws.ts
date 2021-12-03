@@ -757,7 +757,7 @@ export interface TerraformAwsModulesVpcAwsOptions {
   readonly vpnGatewayTags?: { [key: string]: string };
 }
 export class TerraformAwsModulesVpcAws extends TerraformModule {
-  private readonly inputs: { [name: string]: any } = { }
+  private readonly inputs: { [name: string]: any } = { };
   public constructor(scope: Construct, id: string, options: TerraformAwsModulesVpcAwsOptions = {}) {
     super(scope, id, {
       source: 'terraform-aws-modules/vpc/aws',

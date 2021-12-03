@@ -33,7 +33,7 @@ export interface TerraformAwsModulesEcsAwsOptions {
   readonly tags?: { [key: string]: string };
 }
 export class TerraformAwsModulesEcsAws extends TerraformModule {
-  private readonly inputs: { [name: string]: any } = { }
+  private readonly inputs: { [name: string]: any } = { };
   public constructor(scope: Construct, id: string, options: TerraformAwsModulesEcsAwsOptions = {}) {
     super(scope, id, {
       source: 'terraform-aws-modules/ecs/aws',
